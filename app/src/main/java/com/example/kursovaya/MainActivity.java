@@ -32,30 +32,35 @@ public class MainActivity extends AppCompatActivity {
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         SQLiteDatabase db = dbHelper.openDatabase();
 
-        int idNewPatient;
+        List<Patient> patientList;
 
         //Вывод всех записей из таблицы Patient
-//        List<Patient> patientList = dbHelper.getAllPatient();
+//        patientList = dbHelper.getAllPatient();
 //        displayPatientList(patientList);
 
         //Добавление нового пациента
 /*        User userAdd = new User("artur2002", "12345123");
         int idUserAdd = dbHelper.addUser(userAdd);
-        Patient patientAdd = new Patient(9, "Пётр", "Петров",
+        Patient patientAdd = new Patient(idUserAdd, "Пётр", "Петров",
                 "Петрович", "02.02.1993", "м",
                 "ул. Гоголя, д. 34", "88005553536", "9876543210147852");
         idNewPatient = dbHelper.addPatient(patientAdd);
-        List<Patient> patientList = dbHelper.getAllPatient();
+        patientList = dbHelper.getAllPatient();
         displayPatientList(patientList);*/
 
         //Изменение данных пациента
-/*        Patient updatePatient = dbHelper.getPatient((int) idNewUser);
+
+/*        Patient updatePatient = dbHelper.getPatient(2);
         updatePatient.setName("Григорий");
         updatePatient.setDataBirth("02.02.2003");
-        dbHelper.updatePatient(updatePatient);*/
+        dbHelper.updatePatient(updatePatient);
+        patientList = dbHelper.getAllPatient();
+        displayPatientList(patientList);*/
 
         //Удаление пациента
-//        dbHelper.deletePatient(updatePatient);
+        dbHelper.deletePatient(dbHelper.getPatient(2));
+        patientList = dbHelper.getAllPatient();
+        displayPatientList(patientList);
     }
 
     public void displayPatientList(List<Patient> patients) {

@@ -181,22 +181,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Patient getPatient(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(Patient.TABLE_NAME, new String[] {Patient.KEY_ID_USER,
-                        Patient.KEY_NAME, Patient.KEY_SURNAME, Patient.KEY_PATRONYMIC,
-                        Patient.KEY_DATA_BIRTH, Patient.KEY_GENDER, Patient.KEY_ADDRESS,
-                        Patient.KEY_PHONE, Patient.KEY_INSURANCE},
-                Patient.KEY_ID_PATIENT + "=?", new String[] {String.valueOf(id)},
+        Cursor cursor = db.query(Patient.TABLE_NAME, new String[]{
+                        Patient.KEY_ID_PATIENT, // Добавлен ID пациента
+                        Patient.KEY_ID_USER,
+                        Patient.KEY_NAME,
+                        Patient.KEY_SURNAME,
+                        Patient.KEY_PATRONYMIC,
+                        Patient.KEY_DATA_BIRTH,
+                        Patient.KEY_GENDER,
+                        Patient.KEY_ADDRESS,
+                        Patient.KEY_PHONE,
+                        Patient.KEY_INSURANCE
+                },
+                Patient.KEY_ID_PATIENT + "=?", new String[]{String.valueOf(id)},
                 null, null, null, null);
-        if (cursor != null) {
-            cursor.moveToFirst();
-        }
-        Patient getPatient = new Patient(Integer.parseInt(cursor.getString(0)),
-                Integer.parseInt(cursor.getString(1)), cursor.getString(2),
-                cursor.getString(3), cursor.getString(4), cursor.getString(5),
-                cursor.getString(6), cursor.getString(7), cursor.getString(8),
-                cursor.getString(9));
 
-        return getPatient;
+        Patient patient = null; // Инициализируем patient как null
+        if (cursor != null && cursor.moveToFirst()) { // Проверка на null и наличие данных
+            patient = new Patient(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Patient.KEY_ID_PATIENT)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Patient.KEY_ID_USER)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(Patient.KEY_NAME)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(Patient.KEY_SURNAME)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(Patient.KEY_PATRONYMIC)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(Patient.KEY_DATA_BIRTH)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(Patient.KEY_GENDER)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(Patient.KEY_ADDRESS)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(Patient.KEY_PHONE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(Patient.KEY_INSURANCE))
+            );
+        }
+        cursor.close();
+        return patient;
     }
 
     public int updatePatient(Patient patient) {
