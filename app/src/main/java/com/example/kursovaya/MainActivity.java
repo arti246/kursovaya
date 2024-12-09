@@ -1,5 +1,6 @@
 package com.example.kursovaya;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -29,14 +30,17 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        Intent intent = getIntent();
+        int iserId = intent.getIntExtra("idUser", -1);
+
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         SQLiteDatabase db = dbHelper.openDatabase();
 
         List<Patient> patientList;
 
         //Вывод всех записей из таблицы Patient
-//        patientList = dbHelper.getAllPatient();
-//        displayPatientList(patientList);
+        patientList = dbHelper.getAllPatient();
+        displayPatientList(patientList);
 
         //Добавление нового пациента
 /*        User userAdd = new User("artur2002", "12345123");
@@ -44,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         Patient patientAdd = new Patient(idUserAdd, "Пётр", "Петров",
                 "Петрович", "02.02.1993", "м",
                 "ул. Гоголя, д. 34", "88005553536", "9876543210147852");
-        idNewPatient = dbHelper.addPatient(patientAdd);
+        dbHelper.addPatient(patientAdd);
         patientList = dbHelper.getAllPatient();
         displayPatientList(patientList);*/
 
@@ -58,9 +62,9 @@ public class MainActivity extends AppCompatActivity {
         displayPatientList(patientList);*/
 
         //Удаление пациента
-        dbHelper.deletePatient(dbHelper.getPatient(2));
+/*        dbHelper.deletePatient(dbHelper.getPatient(2));
         patientList = dbHelper.getAllPatient();
-        displayPatientList(patientList);
+        displayPatientList(patientList);*/
     }
 
     public void displayPatientList(List<Patient> patients) {

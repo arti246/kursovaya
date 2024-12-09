@@ -121,6 +121,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return userList;
     }
 
+    public int checkUserForAuthorization(User user) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selection = User.KEY_LOGIN + " = ?";
+        Cursor cursor = db.query(User.TABLE_NAME, new String[] {User.KEY_ID_USER, User.KEY_PASSWORD},
+                selection, new String[] {user.getLogin()}, null, null, null, null);
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                String checkpas = cursor.getString(1);
+                if (checkpas.equals(user.getPassword())) {
+                    return user.getId();
+                }
+            } else return -1;
+        }
+        finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return -1;
+    }
+
+    public int checkUserByLogin(User user) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selection = User.KEY_LOGIN + " = ?";
+        Cursor cursor = db.query(User.TABLE_NAME, new String[] {User.KEY_ID_USER}, selection,
+                new String[] {user.getLogin()}, null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst())
+            return Integer.parseInt(cursor.getString(0));
+        else return -1;
+    }
+
     public int updateUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -236,6 +267,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.delete(Patient.TABLE_NAME, Patient.KEY_ID_PATIENT + "=?",
                 new String[]{String.valueOf(patient.getIdPatient())});
         db.close();
+    }
+
+    public String checkPatientByIdUser(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selection = Patient.KEY_ID_USER + " = ?";
+        Cursor cursor = db.query(Patient.TABLE_NAME, new String[] {Patient.KEY_DATA_BIRTH}, selection,
+                new String[] {String.valueOf(id)}, null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            String date = cursor.getString(0);
+            return date;
+        }
+        else return "";
     }
 
     public int addSpec(SpecializationDoctors spec) {
