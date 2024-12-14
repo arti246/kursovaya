@@ -1,4 +1,4 @@
-package com.example.kursovaya;
+package com.example.kursovaya.authorization;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.kursovaya.AdminActivityMain;
+import com.example.kursovaya.DoctorActivityMain;
+import com.example.kursovaya.PatientActivityMain;
+import com.example.kursovaya.R;
 
 import Data.DatabaseHelper;
 import Model.User;
@@ -75,15 +80,13 @@ public class LoginActivity extends AppCompatActivity {
                     if (idUser == -1) {
                         int idNewUser = myDb.addUser(userLogin);
                         if (idNewUser != 0) {
-                            Toast.makeText(LoginActivity.this, "Регистрация прошла успешна!", Toast.LENGTH_SHORT).show();
-
                             if (checkBoxRemember.isChecked()) {
                                 saveDataUser(editTextLogin, editTextPassword);
                             } else {
                                 removeDataUser();
                             }
 
-                            Intent intent = new Intent(LoginActivity.this, AdminActivityMain.class);
+                            Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
                             intent.putExtra("idUser", idNewUser);
                             startActivity(intent);
                             finish();

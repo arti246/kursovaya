@@ -13,20 +13,22 @@
         android:theme="@style/Theme.Kursovaya"
         tools:targetApi="31" >
         <activity
+            android:name=".authorization.RegistrationActivity"
+            android:exported="false" />
+        <activity
             android:name=".DoctorActivityMain"
             android:exported="false" />
         <activity
             android:name=".PatientActivityMain"
             android:exported="false" />
         <activity
-            android:name=".RecoverPasswordActivity"
+            android:name=".authorization.RecoverPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".authorization.LoginActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

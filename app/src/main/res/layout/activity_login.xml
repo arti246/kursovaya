@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity"
+    tools:context=".authorization.LoginActivity"
     android:padding="16dp">
 
     <EditText
@@ -16,8 +16,8 @@
         android:layout_marginTop="120dp"
         android:layout_marginEnd="50dp"
         android:hint="Логин"
-        android:minHeight="48dp"
-        android:textSize="14sp"
+        android:minHeight="@dimen/text_size_medium"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewInfo" />
@@ -32,7 +32,7 @@
         android:hint="Пароль"
         android:inputType="textPassword"
         android:minHeight="48dp"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_size_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextLogin" />
@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="ВХОД"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_size_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/checkBoxRemember" />
@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="РЕГИСТРАЦИЯ"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_size_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonLogin" />
@@ -65,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
         android:text="Авторизация"
-        android:textSize="26sp"
+        android:textSize="@dimen/text_size_large"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,9 +77,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Забыли пароль?"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_size_medium"
         android:textStyle="bold"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonRegister" />
@@ -90,7 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
         android:text="Запомнить меня"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_size_small"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
 

@@ -1,4 +1,4 @@
-package com.example.kursovaya;
+package com.example.kursovaya.authorization;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.kursovaya.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import Data.DatabaseHelper;
