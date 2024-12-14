@@ -71,6 +71,7 @@ public class RecoverPasswordActivity extends AppCompatActivity {
                                     "успешно изменён!", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(RecoverPasswordActivity.this, LoginActivity.class);
                             startActivity(intent);
+                            finish();
                         }
                     }
                 }
@@ -82,6 +83,7 @@ public class RecoverPasswordActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(RecoverPasswordActivity.this, LoginActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 

@@ -15,9 +15,8 @@ import java.util.List;
 
 import Data.DatabaseHelper;
 import Model.Patient;
-import Model.User;
 
-public class MainActivity extends AppCompatActivity {
+public class AdminActivityMain extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

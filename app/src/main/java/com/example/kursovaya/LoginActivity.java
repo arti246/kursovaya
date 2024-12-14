@@ -3,11 +3,9 @@ package com.example.kursovaya;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,9 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import android.content.SharedPreferences;
-
-import java.util.ResourceBundle;
 
 import Data.DatabaseHelper;
 import Model.User;
@@ -88,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                                 removeDataUser();
                             }
 
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, AdminActivityMain.class);
                             intent.putExtra("idUser", idNewUser);
                             startActivity(intent);
                             finish();
@@ -110,9 +105,9 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (!login.isEmpty() && !password.isEmpty()) {
                     userLogin = new User(login, password);
-                    int idUser = myDb.checkUserForAuthorization(userLogin);
+                    userLogin = myDb.checkUserForAuthorization(userLogin);
 
-                    if (idUser != -1) {
+                    if (userLogin != null) {
                         Toast.makeText(LoginActivity.this, "Успешная авторизация!", Toast.LENGTH_SHORT).show();
 
                         if (checkBoxRemember.isChecked()) {
@@ -121,13 +116,28 @@ public class LoginActivity extends AppCompatActivity {
                             removeDataUser();
                         }
 
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.putExtra("idUser", idUser);
-                        startActivity(intent);
-                        finish();
+                        int IdUserType = userLogin.getIdUserType();
+                        Intent intent;
+
+                        if (IdUserType == 1) {
+                            intent = new Intent(LoginActivity.this, AdminActivityMain.class);
+                            loadActivity(userLogin.getId(), intent);
+                        } else if (IdUserType == 2) {
+                            intent = new Intent(LoginActivity.this, DoctorActivityMain.class);
+                            loadActivity(userLogin.getId(), intent);
+                        } else if (IdUserType == 3) {
+                            intent = new Intent(LoginActivity.this, PatientActivityMain.class);
+                            loadActivity(userLogin.getId(), intent);
+                        } else {
+                            Toast.makeText(LoginActivity.this,
+                                    "Проблема с авторизацией! Обратитесь в поддержку!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
 
                     } else {
-                        Toast.makeText(LoginActivity.this, "Введённый логин и пароль не существуют!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this,
+                                "Введённый логин и пароль не существуют!",
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -164,5 +174,11 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor prefEditor = settings.edit();
         prefEditor.remove(PREF_LOGIN);
         prefEditor.remove(PREF_PASSWORD);
+    }
+
+    public void loadActivity(int id, Intent intent) {
+        intent.putExtra("idUser", id);
+        startActivity(intent);
+        finish();
     }
 }

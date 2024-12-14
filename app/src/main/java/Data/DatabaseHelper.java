@@ -121,24 +121,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return userList;
     }
 
-    public int checkUserForAuthorization(User user) {
+    public User checkUserForAuthorization(User user) {
         SQLiteDatabase db = this.getReadableDatabase();
         String selection = User.KEY_LOGIN + " = ?";
-        Cursor cursor = db.query(User.TABLE_NAME, new String[] {User.KEY_ID_USER, User.KEY_PASSWORD},
-                selection, new String[] {user.getLogin()}, null, null, null, null);
+        Cursor cursor = db.query(User.TABLE_NAME, new String[] {User.KEY_ID_USER, User.KEY_PASSWORD,
+                User.KEY_ID_USER_TYPE, User.KEY_LOGIN}, selection, new String[] {user.getLogin()},
+                null, null, null, null);
         try {
             if (cursor != null && cursor.moveToFirst()) {
-                String checkpas = cursor.getString(1);
-                if (checkpas.equals(user.getPassword())) {
-                    return user.getId();
+                String checkPas = cursor.getString(1);
+                if (checkPas.equals(user.getPassword())) {
+                    user.setId(Integer.parseInt(cursor.getString(0)));
+                    user.setIdUserType(Integer.parseInt(cursor.getString(2)));
+                    return user;
                 }
-            } else return -1;
+            } else return null;
         }
         finally {
             if (cursor != null)
                 cursor.close();
         }
-        return -1;
+        return null;
     }
 
     public int checkUserByLogin(User user) {
