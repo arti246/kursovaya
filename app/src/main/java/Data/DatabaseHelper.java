@@ -22,6 +22,7 @@ import Model.Doctor;
 import Model.Patient;
 import Model.SpecializationDoctors;
 import Model.User;
+import Utils.Result;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -402,5 +403,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.delete(Doctor.TABLE_NAME, Doctor.KEY_ID_DOCTOR + "=?",
                 new String[]{String.valueOf(doctor.getIdDoctor())});
         db.close();
+    }
+
+    public Result<User> getUserByLogin(String login, User[] users) {
+        for (User user : users) {
+            if (user.getLogin().equals(login)) {
+                return new Result<>(true, user, null);
+            }
+        }
+        return new Result<>(false, null, "User not found");
     }
 }
