@@ -1,6 +1,16 @@
 package Model;
 
-public class Patient {
+import android.util.Log;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.io.*;
+
+public class Patient implements Treatable, Serializable, Cloneable{
     private int idPatient;
     private int idUser;
     private String name;
@@ -11,6 +21,9 @@ public class Patient {
     private String address;
     private String phone;
     private String insurance;
+
+    protected String medicalHistory;
+    private List<MedicalProcedure> procedures;
 
     public static final String TABLE_NAME = "patients";
     public static final String KEY_ID_PATIENT = "idPatient";
@@ -39,6 +52,7 @@ public class Patient {
         this.address = address;
         this.phone = phone;
         this.insurance = insurance;
+        this.procedures = new ArrayList<>();
     }
 
     public Patient(int idUser, String name, String surname, String patronymic, String dataBirth,
@@ -52,6 +66,38 @@ public class Patient {
         this.address = address;
         this.phone = phone;
         this.insurance = insurance;
+    }
+
+    public Patient(int idPatient, int idUser, String name, String surname, String patronymic,
+                   String dataBirth, String gender, String address, String phone, String insurance,
+                   String medicalHistory, List<MedicalProcedure> procedures) {
+        this.idPatient = idPatient;
+        this.idUser = idUser;
+        this.name = name;
+        this.surname = surname;
+        this.patronymic = patronymic;
+        this.dataBirth = dataBirth;
+        this.gender = gender;
+        this.address = address;
+        this.phone = phone;
+        this.insurance = insurance;
+        this.medicalHistory = medicalHistory;
+        this.procedures = procedures;
+    }
+
+    public Patient(int idUser, String name, String surname, String patronymic, String dataBirth,
+                   String gender, String address, String phone, String insurance,
+                   String medicalHistory) {
+        this.idUser = idUser;
+        this.name = name;
+        this.surname = surname;
+        this.patronymic = patronymic;
+        this.dataBirth = dataBirth;
+        this.gender = gender;
+        this.address = address;
+        this.phone = phone;
+        this.insurance = insurance;
+        this.medicalHistory = medicalHistory;
     }
 
     public int getIdPatient() {
@@ -132,5 +178,50 @@ public class Patient {
 
     public void setInsurance(String insurance) {
         this.insurance = insurance;
+    }
+
+    /**/
+    public void addToMedicalHistory(String entry){
+        this.medicalHistory += entry + "\n";
+    }
+
+    public void printSummary() {
+        Log.d("Patient", "Patient Summary:");
+        Log.d("Patient", "ID: " + idPatient);
+        Log.d("Patient", "Name: " + name + " " + surname + " " + patronymic);
+        Log.d("Patient", "Birth Date: " + dataBirth);
+        Log.d("Patient", "Gender: " + gender);
+        Log.d("Patient", "Address: " + address);
+        Log.d("Patient", "Phone: " + phone);
+        Log.d("Patient", "Insurance: " + insurance);
+    }
+
+    public void printSummaryWithoutBase() {
+        Log.d("Patient", "ID: " + idPatient);
+        Log.d("Patient", "Name: " + name + " " + surname + " " + patronymic);
+    }
+
+    @Override
+    public void receiveTreatment(MedicalProcedure procedure) {
+        this.procedures.add(procedure);
+        Log.d("Patient", "Patient received treatment: " + procedure.getDescription());
+    }
+
+    @Override
+    public Patient clone() {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(this);
+            oos.close();
+
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            Patient copy = (Patient) ois.readObject();
+            ois.close();
+            return copy;
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

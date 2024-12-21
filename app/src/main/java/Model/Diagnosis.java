@@ -1,6 +1,8 @@
 package Model;
 
-public class Diagnosis {
+import java.io.Serializable;
+
+public class Diagnosis implements Serializable{
     private int idDiagnosis;
     private String descriptionSymptoms;
     private String dateStartSymptoms;
