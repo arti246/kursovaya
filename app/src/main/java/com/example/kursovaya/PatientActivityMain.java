@@ -10,6 +10,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import Data.DatabaseHelper;
@@ -18,6 +19,7 @@ import Model.ChronicPatient;
 import Model.Diagnosis;
 import Model.MedicalProcedure;
 import Model.Patient;
+import Model.Prescription;
 import Model.User;
 import Utils.Result;
 
@@ -38,35 +40,42 @@ public class PatientActivityMain extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(this);
 
-        List<Diagnosis> diagnoses = new ArrayList<>();
-        diagnoses.add(new Diagnosis("Кашель", "21.12.2024",
-                "..."));
+        List<Patient> patients = new ArrayList<>();
+        patients = dbHelper.getAllPatient();
+        List<Diagnosis> chronicDiagnoses = new ArrayList<>();
 
-        ChronicPatient patient1 = new ChronicPatient(1, 1, "John", "Doe",
-                "N/A", "1990-01-15", "Male", "123 Main St",
-                "555-1212", "12345", "2024-03-15", diagnoses);
-        patient1.addChronicDiagnosis(new Diagnosis(
-                "Шишка на голове, довольно большая",
-                "21.12.2024", "..."));
+        chronicDiagnoses.add(new Diagnosis("Сильно болит котелок",
+                "22.12.2024", "..."));
 
-        patient1.printSummary();
+        patients.add(new ChronicPatient(101, 101, "Николай", "Зюзин",
+                "Евгеньевич", "12.14.1999", "м",
+                "г.Барнаул, ул.Летняя, д. 54, кв. 777", "87777777777",
+                "1111222244445555", "", chronicDiagnoses));
 
-        patient1.printSummaryWithoutBase();
+        // Сортировка по фамилии
+        Collections.sort(patients, (p1, p2) -> p1.getSurname().compareTo(p2.getSurname()));
 
-        ChronicPatient clonedPatient = patient1.clone();
-        Log.d("Main", "Original Patient: " + patient1.getName() + " " + patient1.getSurname());
-        Log.d("Main", "Cloned Patient: " + clonedPatient.getName() + " " + clonedPatient.getSurname());
-        patient1.setName("Jane"); //Изменяем оригинал
-        Log.d("Main", "Original Patient after change: " + patient1.getName() + " " +
-                patient1.getSurname());
-        Log.d("Main", "Cloned Patient after change: " + clonedPatient.getName() + " " +
-                clonedPatient.getSurname());
+        // Вывод отсортированного списка
+        Log.d("Patient", "Отсортированный список пациентов:");
+        for (Patient p : patients) {
+            p.printSummaryWithoutBase();
+        }
 
-        BloodTest bloodTest = new BloodTest(1, 1, "Complete Blood Count",
-                "WBC: 7.5 x 10^9/L");
-        Log.d("Main", "\nBlood Test:\n" + bloodTest);
-
-        patient1.receiveTreatment(bloodTest);
+        // Поиск по фамилии
+        String surnameToFind = "Иванов";
+        Patient foundPatient = null;
+        for (Patient p : patients) {
+            if (p.getSurname().equals(surnameToFind)) {
+                foundPatient = p;
+                break;
+            }
+        }
+        if(foundPatient != null){
+            Log.d("Patient", "\nНайденный пациент: ");
+            foundPatient.printSummaryWithoutBase();
+        } else {
+            Log.d("Patient", "\nПациент не найден");
+        }
 
         dbHelper.close();
     }

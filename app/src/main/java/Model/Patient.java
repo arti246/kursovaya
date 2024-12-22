@@ -29,7 +29,7 @@ public class Patient implements Treatable, Serializable, Cloneable{
     public static final String KEY_ID_PATIENT = "idPatient";
     public static final String KEY_ID_USER = "idUser";
     public static final String KEY_NAME = "name";
-    public static final String KEY_SURNAME = "suTABLE_NAMErname";
+    public static final String KEY_SURNAME = "surname";
     public static final String KEY_PATRONYMIC = "patronymic";
     public static final String KEY_DATA_BIRTH = "year_birth";
     public static final String KEY_GENDER = "gender";
@@ -197,8 +197,7 @@ public class Patient implements Treatable, Serializable, Cloneable{
     }
 
     public void printSummaryWithoutBase() {
-        Log.d("Patient", "ID: " + idPatient);
-        Log.d("Patient", "Name: " + name + " " + surname + " " + patronymic);
+        Log.d("Patient", "ФИО: " + surname + " " + name + " " + patronymic);
     }
 
     @Override

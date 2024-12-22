@@ -91,15 +91,15 @@ public class ChronicPatient extends Patient implements Serializable, Cloneable {
     }
 
     public void printSummaryWithoutBase() {
-        Log.d("ChronicPatient", "\nChronic Patient Summary (without base):");
-        Log.d("ChronicPatient", "Name: " + getName() + " " + getSurname() + " " +
+        Log.d("ChronicPatient", "Хронический пациент:");
+        Log.d("ChronicPatient", "ФИО: " + getSurname() + " " + getName() + " " +
                 getPatronymic());
         if (chronicDiagnoses != null && !chronicDiagnoses.isEmpty()) {
             for (Diagnosis diagnosis : chronicDiagnoses) {
                 Log.d("chronicDiagnoses", "- " + diagnosis.getDescriptionSymptoms());
             }
         } else {
-            Log.d("chronicDiagnoses", " chronicDiagnoses - None");
+            Log.d("chronicDiagnoses", "Диагнозов - нет");
         }
 
         if (chronicPrescriptions != null && !chronicPrescriptions.isEmpty()) {
@@ -107,7 +107,7 @@ public class ChronicPatient extends Patient implements Serializable, Cloneable {
                 Log.d("chronicPrescriptions", "- " + prescription.getNamePrescription());
             }
         } else {
-            Log.d("chronicPrescriptions", "ChronicPrescriptions - None");
+            Log.d("chronicPrescriptions", "Рецепты - нет");
         }
     }
 
