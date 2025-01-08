@@ -33,6 +33,8 @@ public class User {
         this.password = password;
     }
 
+
+
     public int getIdUserType() {
         return idUserType;
     }
