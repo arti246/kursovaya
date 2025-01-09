@@ -1,15 +1,5 @@
 package Model;
 
-import android.util.Log;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.io.*;
-
 public class Patient {
     private int idPatient;
     private int idUser;

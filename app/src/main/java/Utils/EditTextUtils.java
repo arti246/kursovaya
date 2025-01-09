@@ -2,8 +2,6 @@ package Utils;
 
 import android.widget.EditText;
 
-import com.example.kursovaya.R;
-
 public class EditTextUtils {
     public static String checkEditTextIsEmpty(EditText editText) {
         String login = editText.getText().toString();

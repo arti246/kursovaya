@@ -1,7 +1,5 @@
 package Model;
 
-import java.io.Serializable;
-
 public class Diagnosis {
     private int idDiagnosis;
     private String descriptionSymptoms;
