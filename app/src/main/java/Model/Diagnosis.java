@@ -2,7 +2,7 @@ package Model;
 
 import java.io.Serializable;
 
-public class Diagnosis implements Serializable{
+public class Diagnosis {
     private int idDiagnosis;
     private String descriptionSymptoms;
     private String dateStartSymptoms;
