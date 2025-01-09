@@ -16,7 +16,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.kursovaya.AdminMainActivity;
+import com.example.kursovaya.admin.AdminListPatientActivity;
+import com.example.kursovaya.admin.AdminMainActivity;
 import com.example.kursovaya.DoctorMainActivity;
 import com.example.kursovaya.PatientMainActivity;
 import com.example.kursovaya.R;
@@ -119,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                         Intent intent;
 
                         if (IdUserType == 1) {
-                            intent = new Intent(LoginActivity.this, AdminMainActivity.class);
+                            intent = new Intent(LoginActivity.this, AdminMainActivity.class);//
                             loadActivity(userLogin.getId(), intent);
                         } else if (IdUserType == 2) {
                             intent = new Intent(LoginActivity.this, DoctorMainActivity.class);

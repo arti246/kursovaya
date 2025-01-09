@@ -13,31 +13,39 @@
         android:theme="@style/Theme.Kursovaya"
         tools:targetApi="31">
         <activity
+            android:name=".cards.PatientCardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditPatientActivity"
+            android:exported="false" />
+        <activity
+            android:name=".admin.AdminListPatientActivity"
+            android:exported="false" />
+        <activity
+            android:name=".admin.AdminPatientListActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Kursovaya" />
+        <activity
             android:name=".DoctorMainActivity"
             android:exported="true" />
-
         <activity
-            android:name=".AdminMainActivity"
+            android:name=".admin.AdminMainActivity"
             android:exported="true" />
-
         <activity
             android:name=".autorization.RegistrationActivity"
             android:exported="true" />
-
         <activity
             android:name=".autorization.RecoverPasswordActivity"
             android:exported="true" />
-
         <activity
             android:name=".autorization.LoginActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".PatientMainActivity"
             android:exported="true" />

@@ -4,7 +4,7 @@ import android.widget.EditText;
 
 public class EditTextUtils {
     public static String checkEditTextIsEmpty(EditText editText) {
-        String login = editText.getText().toString();
+        String login = editText.getText().toString().trim();
         if (login.isEmpty()) {
             setErrorForEditText(editText, "Заполните поле!");
             return "";
@@ -15,7 +15,7 @@ public class EditTextUtils {
     }
 
     public static String checkEditTextPassword(EditText editText) {
-        String password = editText.getText().toString();
+        String password = editText.getText().toString().trim();
         if (password.length() < 4) {
             setErrorForEditText(editText, "Заполните поле!");
             return "";
