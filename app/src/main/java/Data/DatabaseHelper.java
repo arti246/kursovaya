@@ -83,6 +83,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(User.KEY_LOGIN, user.getLogin());
         contentValues.put(User.KEY_PASSWORD, user.getPassword());
+        contentValues.put(User.KEY_ID_USER_TYPE, 3);
 
         return (int) db.insert(User.TABLE_NAME, null, contentValues);
     }
@@ -205,7 +206,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(Patient.KEY_SURNAME, patient.getSurname());
         contentValues.put(Patient.KEY_PATRONYMIC, patient.getPatronymic());
         contentValues.put(Patient.KEY_DATA_BIRTH, patient.getDataBirth());
-        contentValues.put("gender", String.valueOf(patient.getGender()));
+        contentValues.put(Patient.KEY_GENDER, String.valueOf(patient.getGender()));
         contentValues.put(Patient.KEY_ADDRESS, patient.getAddress());
         contentValues.put(Patient.KEY_PHONE, patient.getPhone());
         contentValues.put(Patient.KEY_INSURANCE, patient.getInsurance());

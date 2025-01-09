@@ -78,21 +78,17 @@ public class LoginActivity extends AppCompatActivity {
                     int idUser = myDb.checkUserByLogin(userLogin);
 
                     if (idUser == -1) {
-                        int idNewUser = myDb.addUser(userLogin);
-                        if (idNewUser != 0) {
-                            if (checkBoxRemember.isChecked()) {
-                                saveDataUser(editTextLogin, editTextPassword);
-                            } else {
-                                removeDataUser();
-                            }
-
-                            Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
-                            intent.putExtra("idUser", idNewUser);
-                            startActivity(intent);
-                            finish();
+                        if (checkBoxRemember.isChecked()) {
+                            saveDataUser(editTextLogin, editTextPassword);
                         } else {
-                            Toast.makeText(LoginActivity.this, "Возникла проблема с регистрацией!", Toast.LENGTH_SHORT).show();
+                            removeDataUser();
                         }
+
+                        Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
+                        intent.putExtra("newUserLogin", userLogin.getLogin());
+                        intent.putExtra("newUserPassword", userLogin.getPassword());
+                        startActivity(intent);
+                        finish();
                     } else {
                         Toast.makeText(LoginActivity.this, "Пользватель с таким логином уже существует!", Toast.LENGTH_SHORT).show();
                     }

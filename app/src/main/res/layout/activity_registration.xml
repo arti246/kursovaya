@@ -105,40 +105,41 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextPatronymic" />
 
-    <!-- radioButtonMan -->
-    <RadioButton
-        android:id="@+id/radioButtonMan"
+    <!-- LinearLayout для Пол и радиокнопок-->
+    <LinearLayout
+        android:id="@+id/genderLinearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="122dp"
-        android:text="Мужской"
-        android:textSize="@dimen/text_size_medium"
-        app:layout_constraintEnd_toEndOf="@+id/editTextDataBirth"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDataBirth" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@+id/editTextDataBirth"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" >
 
-    <!-- radioButtonWoman -->
-    <RadioButton
-        android:id="@+id/radioButtonWoman"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Женский"
-        android:textSize="@dimen/text_size_medium"
-        app:layout_constraintEnd_toEndOf="@+id/editTextDataBirth"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/radioButtonMan"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDataBirth" />
+        <TextView
+            android:id="@+id/textViewGender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Пол: "
+            android:textSize="@dimen/text_size_medium"/>
 
-    <!-- textViewGender -->
-    <TextView
-        android:id="@+id/textViewGender"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:text="Пол:"
-        android:textSize="@dimen/text_size_medium"
-        app:layout_constraintEnd_toStartOf="@+id/radioButtonMan"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDataBirth" />
+        <RadioGroup
+            android:id="@+id/genderRadioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/maleRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Мужской" />
+            <RadioButton
+                android:id="@+id/femaleRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Женский" />
+        </RadioGroup>
+    </LinearLayout>
 
     <!-- editTextAddress -->
     <EditText
@@ -153,7 +154,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioButtonMan" />
+        app:layout_constraintTop_toBottomOf="@+id/genderLinearLayout" />
 
     <!-- editTextPhone -->
     <EditText
@@ -197,6 +198,5 @@
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextInsurance" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
