@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (!login.isEmpty() && !password.isEmpty()) {
                     userLogin = new User(login, password);
-                    int idUser = myDb.checkUserByLogin(userLogin);
+                    int idUser = myDb.checkUserByLogin(login);
 
                     if (idUser == -1) {
                         if (checkBoxRemember.isChecked()) {

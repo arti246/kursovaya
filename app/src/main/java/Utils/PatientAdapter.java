@@ -33,7 +33,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientV
     @Override
     public void onBindViewHolder(@NonNull PatientViewHolder holder, int position) {
         Patient patient = patients.get(position);
-        holder.fmioTextView.setText("FMIO: " + patient.getSurname() + " " + patient.getName() +
+        holder.fmioTextView.setText("ФИО: " + patient.getSurname() + " " + patient.getName() +
                 " " + patient.getPatronymic());
         holder.birthDateTextView.setText("Дата рождения: " + patient.getDataBirth());
         holder.policyNumberTextView.setText("№ полиса: " + patient.getInsurance());

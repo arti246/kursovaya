@@ -65,6 +65,7 @@ public class AdminListPatientActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
+        /*Фильтр для поиска*/
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -80,6 +81,7 @@ public class AdminListPatientActivity extends AppCompatActivity {
             }
         });
 
+        /*Кнопка назад*/
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,7 +91,7 @@ public class AdminListPatientActivity extends AppCompatActivity {
             }
         });
 
-        /*Доделать добавление пользователя*/
+        /*Кнопка добавления нового пациента*/
         addPatientButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,13 +104,15 @@ public class AdminListPatientActivity extends AppCompatActivity {
         db.close();
     }
 
+    /*Открытие карточки выбранного пациента*/
     private void openEditPatientActivity(Patient patient) {
         Intent intent = new Intent(AdminListPatientActivity.this,
-                EditPatientActivity.class);
+                PatientCardActivity.class);
         intent.putExtra("PATIENT_EXTRA", patient);
         startActivity(intent);
     }
 
+    /*Фильтр списка*/
     private void filterList(String text) {
         List<Patient> filteredList = new ArrayList<>();
         for (Patient patient : patientList) {

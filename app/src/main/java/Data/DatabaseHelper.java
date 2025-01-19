@@ -4,11 +4,16 @@ import static android.content.ContentValues.TAG;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.example.kursovaya.PatientMainActivity;
+import com.example.kursovaya.autorization.RegistrationActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -145,25 +150,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return null;
     }
 
-    public int checkUserByLogin(User user) {
+    public int checkUserByLogin(String login) {
         SQLiteDatabase db = this.getReadableDatabase();
         String selection = User.KEY_LOGIN + " = ?";
         Cursor cursor = db.query(User.TABLE_NAME, new String[] {User.KEY_ID_USER}, selection,
-                new String[] {user.getLogin()}, null, null, null, null);
+                new String[] {login}, null, null, null, null);
 
         if (cursor != null && cursor.moveToFirst())
             return Integer.parseInt(cursor.getString(0));
         else return -1;
     }
 
-    public int updateUser(User user) {
+    public User checkUserByUserID(int id) {
+        User user = new User();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selection = User.KEY_ID_USER + " = ?";
+        Cursor cursor = db.query(User.TABLE_NAME, new String[] {User.KEY_LOGIN, User.KEY_PASSWORD},
+                selection, new String[] {Integer.toString(id)},
+                null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            user.setLogin(cursor.getString(0));
+            user.setPassword(cursor.getString(1));
+        }
+        cursor.close();
+        return user;
+    }
+
+    public int addNewPatientAndUser(User user, Patient patient) {
+        int idUser;
+        if ((idUser = checkUserByLogin(user.getLogin())) == -1) {
+            idUser = addUser(user);
+        }
+
+        patient.setIdUser(idUser);
+        int idPatient = addPatient(patient);
+        if (idPatient != -1) {
+            return idPatient;
+        }
+
+        return -1;
+    }
+
+    public boolean updateUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(User.KEY_LOGIN, user.getLogin());
         contentValues.put(User.KEY_PASSWORD, user.getPassword());
 
-        return db.update(User.TABLE_NAME, contentValues, User.KEY_ID_USER + "=?",
+        int updatedRows = db.update(User.TABLE_NAME, contentValues, User.KEY_ID_USER + "=?",
                 new String[]{String.valueOf(user.getId())});
+        return updatedRows > 0;
     }
 
     public void deleteUser(User user) {
@@ -250,7 +287,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return patient;
     }
 
-    public int updatePatient(Patient patient) {
+    public boolean updatePatient(Patient patient) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(Patient.KEY_NAME, patient.getName());
@@ -262,8 +299,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(Patient.KEY_PHONE, patient.getPhone());
         contentValues.put(Patient.KEY_INSURANCE, patient.getInsurance());
 
-        return db.update(Patient.TABLE_NAME, contentValues, Patient.KEY_ID_PATIENT + "=?",
+        int updatedRows = db.update(Patient.TABLE_NAME, contentValues, Patient.KEY_ID_PATIENT + "=?",
                 new String[]{String.valueOf(patient.getIdPatient())});
+        return updatedRows > 0;
     }
 
     public void deletePatient(Patient patient) {
@@ -273,7 +311,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public String checkPatientByIdUser(int id) {
+    public String checkPatientByIdUserForDate(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         String selection = Patient.KEY_ID_USER + " = ?";
         Cursor cursor = db.query(Patient.TABLE_NAME, new String[] {Patient.KEY_DATA_BIRTH}, selection,
@@ -284,6 +322,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return date;
         }
         else return "";
+    }
+
+    public int checkIDPatientByIdUser(int idUser) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selection = Patient.KEY_ID_USER + " = ?";
+        Cursor cursor = db.query(Patient.TABLE_NAME, new String[] {Patient.KEY_ID_PATIENT},
+                selection, new String[] {Integer.toString(idUser)},
+                null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            return Integer.parseInt(cursor.getString(0));
+        }
+
+        cursor.close();
+        return -1;
     }
 
     public int addSpec(SpecializationDoctors spec) {

@@ -55,10 +55,9 @@ public class RecoverPasswordActivity extends AppCompatActivity {
                 String password = EditTextUtils.checkEditTextPassword(editTextPassword);
 
                 if(!login.isEmpty() && !date.isEmpty() && !password.isEmpty()) {
-                    User user = new User();
-                    user.setLogin(login);
-                    int idUser = dbHelper.checkUserByLogin(user);
-                    String dateUser = dbHelper.checkPatientByIdUser(idUser);
+                    User user;
+                    int idUser = dbHelper.checkUserByLogin(login);
+                    String dateUser = dbHelper.checkPatientByIdUserForDate(idUser);
 
                     if (idUser == -1) {
                         Toast.makeText(RecoverPasswordActivity.this, "Пользователя с " +
@@ -68,7 +67,7 @@ public class RecoverPasswordActivity extends AppCompatActivity {
                                 " не соответствует!", Toast.LENGTH_SHORT).show();
                     } else {
                         user = new User(idUser, login, password);
-                        if (dbHelper.updateUser(user) == idUser) {
+                        if (dbHelper.updateUser(user)) {
                             Toast.makeText(RecoverPasswordActivity.this, "Пароль " +
                                     "успешно изменён!", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(RecoverPasswordActivity.this, LoginActivity.class);

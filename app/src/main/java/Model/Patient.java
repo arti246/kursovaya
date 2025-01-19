@@ -56,6 +56,18 @@ public class Patient implements Serializable {
         this.insurance = insurance;
     }
 
+    public Patient(String name, String surname, String patronymic, String dataBirth, String gender,
+                   String address, String phone, String insurance) {
+        this.name = name;
+        this.surname = surname;
+        this.patronymic = patronymic;
+        this.dataBirth = dataBirth;
+        this.gender = gender;
+        this.address = address;
+        this.phone = phone;
+        this.insurance = insurance;
+    }
+
     public int getIdPatient() {
         return idPatient;
     }

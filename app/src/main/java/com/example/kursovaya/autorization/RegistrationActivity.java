@@ -84,14 +84,10 @@ public class RegistrationActivity extends AppCompatActivity {
                         selectedGender = Objects.equals(selectedRadioButton.getText().toString(),
                                 "Мужской") ? "м" : "ж";
 
-                        User newUser = new User(newUserLogin, newUserPassword);
-                        int idUser;
-                        if ((idUser = db.checkUserByLogin(newUser)) == -1) {
-                            idUser = db.addUser(newUser);
-                        }
-
-                        int idPatient = db.addPatient(new Patient(idUser, name, surname, patronymic,
-                                dataBirth, selectedGender, address, phone, insurance));
+                        /*добавление пользователя и пациента*/
+                        int idPatient = db.addNewPatientAndUser(new User(newUserLogin, newUserPassword),
+                                new Patient(name, surname, patronymic, dataBirth, selectedGender,
+                                        address, phone, insurance));
 
                         if (idPatient != -1) {
                             Toast.makeText(RegistrationActivity.this,
@@ -104,7 +100,6 @@ public class RegistrationActivity extends AppCompatActivity {
                             Toast.makeText(RegistrationActivity.this,
                                     "Ошибка с регистрацией!", Toast.LENGTH_SHORT).show();
                         }
-
 
                     } else Toast.makeText(RegistrationActivity.this, "Выберите пол!",
                             Toast.LENGTH_SHORT).show();
