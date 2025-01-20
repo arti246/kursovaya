@@ -118,7 +118,7 @@ public class PatientCardActivity extends AppCompatActivity {
                     genderRadioGroup.check(femaleRadioButton.getId());
                 }
 
-                User user = db.checkUserByUserID(patient.getIdPatient());
+                User user = db.checkUserByUserID(patient.getIdUser());
                 if (user != null) {
                     editTextLogin.setText(user.getLogin());
                     originalLogin = user.getLogin();
@@ -153,33 +153,32 @@ public class PatientCardActivity extends AppCompatActivity {
     private void saveChanges(){
         String currentLogin = editTextLogin.getText().toString();
         boolean loginChanged = !currentLogin.equals(originalLogin);
-        int idUser = db.checkUserByLogin(currentLogin);
+        int checkId = db.checkUserByLogin(currentLogin);
+        int idUser = db.checkUserByLogin(originalLogin);
 
         if(loginChanged){
             // Проверяем логин в базе данных, только если он изменился
-            if(idUser != -1){
+            if(checkId != -1){
                 editTextLogin.setError("Логин уже занят");
                 return;
             }
         }
 
         if(typeOperation == 1){
-            //update
             if (updatePatient(idUser)){
                 Toast.makeText(this,"Данные обновлены!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(PatientCardActivity.this,
-                        PatientCardActivity.class);
+                        AdminListPatientActivity.class);
                 startActivity(intent);
                 finish();
             } else {
                 Toast.makeText(this,"Не удалось обновить данные", Toast.LENGTH_SHORT).show();
             }
         } else {
-            //add new
             if(addPatient(idUser)){
                 Toast.makeText(this,"Данные добавлены!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(PatientCardActivity.this,
-                        PatientCardActivity.class);
+                        AdminListPatientActivity.class);
                 startActivity(intent);
                 finish();
             } else {
@@ -216,7 +215,7 @@ public class PatientCardActivity extends AppCompatActivity {
         User user = new User();
         user.setLogin(editTextLogin.getText().toString().trim());
         user.setPassword(editTextPassword.getText().toString().trim());
-        user.setId(idUser);
+        if (idUser != -1) user.setId(idUser);
         return user;
     }
 

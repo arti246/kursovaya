@@ -219,6 +219,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do {
                 Patient patient = new Patient();
                 patient.setIdPatient(Integer.parseInt(cursor.getString(0)));
+                patient.setIdUser(Integer.parseInt(cursor.getString(1)));
                 patient.setName(cursor.getString(2));
                 patient.setSurname(cursor.getString(3));
                 patient.setPatronymic(cursor.getString(4));

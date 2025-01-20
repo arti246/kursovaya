@@ -22,10 +22,6 @@
             android:name=".admin.AdminListPatientActivity"
             android:exported="false" />
         <activity
-            android:name=".admin.AdminPatientListActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Kursovaya" />
-        <activity
             android:name=".DoctorMainActivity"
             android:exported="true" />
         <activity
