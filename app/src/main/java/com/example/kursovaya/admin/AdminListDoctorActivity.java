@@ -16,30 +16,30 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kursovaya.R;
-import com.example.kursovaya.cards.PatientCardActivity;
+import com.example.kursovaya.cards.DoctorCardActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import Data.DatabaseHelper;
-import Model.Patient;
-import Utils.AdaptersAdmin.PatientAdapter;
+import Model.Doctor;
+import Utils.AdaptersAdmin.DoctorAdminAdapter;
 
-public class AdminListPatientActivity extends AppCompatActivity {
+public class AdminListDoctorActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private PatientAdapter adapter;
-    private List<Patient> patientList;
+    private DoctorAdminAdapter adapter;
+    private List<Doctor> doctorList;
     private EditText searchEditText;
-    private FloatingActionButton addPatientButton, buttonBack;
+    private FloatingActionButton addDoctorButton, buttonBack;
     private DatabaseHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_admin_list_patient);
+        setContentView(R.layout.activity_admin_list_doctor);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -49,13 +49,14 @@ public class AdminListPatientActivity extends AppCompatActivity {
         initViews(); // Инициализация объектов
         db = new DatabaseHelper(this);
 
-        patientList = db.getAllPatient();
-        adapter = new PatientAdapter(patientList, new PatientAdapter.OnItemClickListener() {
+        doctorList = db.getAllDoctors();
+
+        adapter = new DoctorAdminAdapter(doctorList, new DoctorAdminAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(Patient patient) {
-                openEditPatientActivity(patient);
+            public void onItemClick(Doctor doctor) {
+                openEditDoctorActivity(doctor);
             }
-        });
+        }, db);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
@@ -79,18 +80,18 @@ public class AdminListPatientActivity extends AppCompatActivity {
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AdminListPatientActivity.this,
+                startActivity(new Intent(AdminListDoctorActivity.this,
                         AdminMainActivity.class));
                 finish();
             }
         });
 
         /*Кнопка добавления нового пациента*/
-        addPatientButton.setOnClickListener(new View.OnClickListener() {
+        addDoctorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AdminListPatientActivity.this,
-                        PatientCardActivity.class);
+                Intent intent = new Intent(AdminListDoctorActivity.this,
+                        DoctorCardActivity.class);
                 startActivity(intent);
             }
         });
@@ -98,29 +99,29 @@ public class AdminListPatientActivity extends AppCompatActivity {
         db.close();
     }
 
-    /*Открытие карточки выбранного пациента*/
-    private void openEditPatientActivity(Patient patient) {
-        Intent intent = new Intent(AdminListPatientActivity.this,
-                PatientCardActivity.class);
-        intent.putExtra("PATIENT_EXTRA", patient);
+    private void initViews() {
+        recyclerView = findViewById(R.id.recyclerView);
+        searchEditText = findViewById(R.id.searchEditText);
+        addDoctorButton = findViewById(R.id.addPatientButton);
+        buttonBack = findViewById(R.id.buttonBack);
+    }
+
+    /*Открытие карточки выбранного доктора*/
+    private void openEditDoctorActivity(Doctor doctor) {
+        Intent intent = new Intent(AdminListDoctorActivity.this,
+                DoctorCardActivity.class);
+        intent.putExtra("DOCTOR_EXTRA", doctor);
         startActivity(intent);
     }
 
     /*Фильтр списка*/
     private void filterList(String text) {
-        List<Patient> filteredList = new ArrayList<>();
-        for (Patient patient : patientList) {
-            if (patient.getSurname().toLowerCase().contains(text.toLowerCase())) {
-                filteredList.add(patient);
+        List<Doctor> filteredList = new ArrayList<>();
+        for (Doctor doctor : doctorList) {
+            if (doctor.getSurname().toLowerCase().contains(text.toLowerCase())) {
+                filteredList.add(doctor);
             }
         }
         adapter.filterList(filteredList);
-    }
-
-    private void initViews() {
-        recyclerView = findViewById(R.id.recyclerView);
-        searchEditText = findViewById(R.id.searchEditText);
-        addPatientButton = findViewById(R.id.addPatientButton);
-        buttonBack = findViewById(R.id.buttonBack);
     }
 }

@@ -398,9 +398,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 doctor.setIdDoctor(Integer.parseInt(cursor.getString(0)));
                 doctor.setName(cursor.getString(2));
                 doctor.setSurname(cursor.getString(3));
-                doctor.setPatronymic(cursor.getString(5));
-                doctor.setIdSpecialization(Integer.parseInt(cursor.getString(6)));
-                doctor.setOffice_number(cursor.getString(7));
+                doctor.setPatronymic(cursor.getString(4));
+                doctor.setIdSpecialization(Integer.parseInt(cursor.getString(5)));
+                doctor.setOffice_number(cursor.getString(6));
 
                 doctorsList.add(doctor);
             } while (cursor.moveToNext());
@@ -457,5 +457,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.delete(Doctor.TABLE_NAME, Doctor.KEY_ID_DOCTOR + "=?",
                 new String[]{String.valueOf(doctor.getIdDoctor())});
         db.close();
+    }
+
+    public String getSpecializationById(int idSpec) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selection = SpecializationDoctors.KEY_ID_SPEC + " = ?";
+        Cursor cursor = db.query(SpecializationDoctors.TABLE_NAME,
+                new String[] {SpecializationDoctors.KEY_NAME_SPEC},
+                selection, new String[] {Integer.toString(idSpec)},
+                null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            return cursor.getString(0);
+        }
+
+        cursor.close();
+        return "";
     }
 }

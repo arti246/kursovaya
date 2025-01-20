@@ -6,18 +6,18 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/fmioTextView"
+        android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/birthDateTextView"
+        android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/policyNumberTextView"
+        android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

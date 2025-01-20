@@ -17,6 +17,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.kursovaya.R;
+import com.example.kursovaya.cards.PatientCardActivity;
 
 import java.util.List;
 
@@ -47,8 +48,18 @@ public class AdminMainActivity extends AppCompatActivity {
         patientsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AdminMainActivity.this,
-                        AdminListPatientActivity.class));
+                Intent intent = new Intent(AdminMainActivity.this,
+                        AdminListPatientActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        doctorsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AdminMainActivity.this,
+                        AdminListDoctorActivity.class);
+                startActivity(intent);
             }
         });
 

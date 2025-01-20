@@ -1,4 +1,4 @@
-package Utils;
+package Utils.AdaptersAdmin;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +13,7 @@ import java.util.List;
 
 import Model.Patient;
 
-public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientViewHolder> {
+public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientViewHolder>{
 
     private List<Patient> patients;
     private OnItemClickListener listener;
@@ -26,17 +26,17 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientV
     @NonNull
     @Override
     public PatientViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.patient_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.admin_list_item, parent, false);
         return new PatientViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull PatientViewHolder holder, int position) {
         Patient patient = patients.get(position);
-        holder.fmioTextView.setText("ФИО: " + patient.getSurname() + " " + patient.getName() +
+        holder.textView1.setText("ФИО: " + patient.getSurname() + " " + patient.getName() +
                 " " + patient.getPatronymic());
-        holder.birthDateTextView.setText("Дата рождения: " + patient.getDataBirth());
-        holder.policyNumberTextView.setText("№ полиса: " + patient.getInsurance());
+        holder.textView2.setText("Дата рождения: " + patient.getDataBirth());
+        holder.textView3.setText("№ полиса: " + patient.getInsurance());
         holder.itemView.setOnClickListener(v -> { // устанавливаем слушателя нажатий
             if(listener != null) {
                 listener.onItemClick(patient);
@@ -50,15 +50,15 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientV
     }
 
     public static class PatientViewHolder extends RecyclerView.ViewHolder {
-        TextView fmioTextView;
-        TextView birthDateTextView;
-        TextView policyNumberTextView;
+        TextView textView1;
+        TextView textView2;
+        TextView textView3;
 
         public PatientViewHolder(@NonNull View itemView) {
             super(itemView);
-            fmioTextView = itemView.findViewById(R.id.fmioTextView);
-            birthDateTextView = itemView.findViewById(R.id.birthDateTextView);
-            policyNumberTextView = itemView.findViewById(R.id.policyNumberTextView);
+            textView1 = itemView.findViewById(R.id.textView1);
+            textView2 = itemView.findViewById(R.id.textView2);
+            textView3 = itemView.findViewById(R.id.textView3);
         }
     }
 
