@@ -255,6 +255,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return (int) db.insert(Patient.TABLE_NAME, null, contentValues);
     }
 
+    public int addNewDoctorAndUser(User user, Doctor doctor) {
+        int idUser;
+        if ((idUser = checkUserByLogin(user.getLogin())) == -1) {
+            idUser = addUser(user);
+        }
+
+        doctor.setIdUser(idUser);
+        int idDoctor = addDoctor(doctor);
+        if (idDoctor != -1) {
+            return idDoctor;
+        }
+
+        return -1;
+    }
+
     public Patient getPatient(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(Patient.TABLE_NAME, new String[]{
@@ -371,20 +386,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public List<SpecializationDoctors> getAllSpec() {
+    public List<String> getAllSpecName() {
         SQLiteDatabase db = this.getReadableDatabase();
-        List<SpecializationDoctors> specList = new ArrayList<>();
+        List<String> specList = new ArrayList<>();
 
         String query = "SELECT * FROM " + SpecializationDoctors.TABLE_NAME;
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             do {
-                SpecializationDoctors spec = new SpecializationDoctors();
-                spec.setIdSpec(Integer.parseInt(cursor.getString(0)));
-                spec.setNameSpec(cursor.getString(1));
-
-                specList.add(spec);
+                 specList.add(cursor.getString(1));
             } while (cursor.moveToNext());
         }
         return specList;
@@ -401,6 +412,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do {
                 Doctor doctor = new Doctor();
                 doctor.setIdDoctor(Integer.parseInt(cursor.getString(0)));
+                doctor.setIdUser(Integer.parseInt(cursor.getString(1)));
                 doctor.setName(cursor.getString(2));
                 doctor.setSurname(cursor.getString(3));
                 doctor.setPatronymic(cursor.getString(4));
@@ -417,6 +429,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
+        contentValues.put(Doctor.KEY_ID_USER, doctor.getIdUser());
         contentValues.put(Doctor.KEY_NAME, doctor.getName());
         contentValues.put(Doctor.KEY_SURNAME, doctor.getSurname());
         contentValues.put(Doctor.KEY_PATRONYMIC, doctor.getPatronymic());
@@ -444,7 +457,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return getDoctor;
     }
 
-    public int updateDoctor(Doctor doctor) {
+    public boolean updateDoctor(Doctor doctor) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(Doctor.KEY_NAME, doctor.getName());
@@ -453,15 +466,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(Doctor.KEY_ID_SPEC, doctor.getIdSpecialization());
         contentValues.put(Doctor.KEY_OFFICE_NUM, doctor.getOffice_number());
 
-        return db.update(Doctor.TABLE_NAME, contentValues, Doctor.KEY_ID_DOCTOR + "=?",
+        int countRows = db.update(Doctor.TABLE_NAME, contentValues, Doctor.KEY_ID_DOCTOR + "=?",
                 new String[]{String.valueOf(doctor.getIdDoctor())});
+
+        return countRows > 0;
     }
 
-    public void deleteDoctor(Doctor doctor) {
+    public boolean deleteDoctor(Doctor doctor) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(Doctor.TABLE_NAME, Doctor.KEY_ID_DOCTOR + "=?",
+        int countRows = db.delete(Doctor.TABLE_NAME, Doctor.KEY_ID_DOCTOR + "=?",
                 new String[]{String.valueOf(doctor.getIdDoctor())});
         db.close();
+
+        return countRows > 0;
+    }
+
+    public int checkIDDoctorByIdUser(int idUser) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selection = Doctor.KEY_ID_USER + " = ?";
+        Cursor cursor = db.query(Doctor.TABLE_NAME, new String[] {Doctor.KEY_ID_DOCTOR},
+                selection, new String[] {Integer.toString(idUser)},
+                null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            return Integer.parseInt(cursor.getString(0));
+        }
+
+        cursor.close();
+        return -1;
     }
 
     public String getSpecializationById(int idSpec) {
@@ -478,5 +510,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         cursor.close();
         return "";
+    }
+
+    public int getIdSpecBySpecialization(String spec) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selection = SpecializationDoctors.KEY_NAME_SPEC + " = ?";
+        Cursor cursor = db.query(SpecializationDoctors.TABLE_NAME,
+                new String[] {SpecializationDoctors.KEY_ID_SPEC},
+                selection, new String[] {spec},
+                null, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            return Integer.parseInt(cursor.getString(0));
+        }
+
+        cursor.close();
+        return -1;
     }
 }

@@ -137,11 +137,13 @@ public class PatientCardActivity extends AppCompatActivity {
 
                 typeOperation = 1;
                 buttonAdd.setText("СОХРАНИТЬ");
+                buttonDelete.setVisibility(View.VISIBLE);
             }
         } else {
             typeOperation = 0;
             originalLogin = "";
             buttonAdd.setText("ДОБАВИТЬ");
+            buttonDelete.setVisibility(View.GONE);
         }
     }
 
