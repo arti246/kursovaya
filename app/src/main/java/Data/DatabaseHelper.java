@@ -203,9 +203,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return updatedRows > 0;
     }
 
-    public void deleteUser(User user) {
+    public boolean deleteUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(User.TABLE_NAME, User.KEY_ID_USER + "=?", new String[]{String.valueOf(user.getId())});
+        int countRows = db.delete(User.TABLE_NAME, User.KEY_ID_USER + "=?",
+                new String[]{String.valueOf(user.getId())});
+        db.close();
+        return countRows > 0;
     }
 
     public List<Patient> getAllPatient() {
@@ -305,11 +308,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return updatedRows > 0;
     }
 
-    public void deletePatient(Patient patient) {
+    public boolean deletePatient(Patient patient) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(Patient.TABLE_NAME, Patient.KEY_ID_PATIENT + "=?",
+        int countRows = db.delete(Patient.TABLE_NAME, Patient.KEY_ID_PATIENT + "=?",
                 new String[]{String.valueOf(patient.getIdPatient())});
         db.close();
+
+        return countRows > 0;
     }
 
     public String checkPatientByIdUserForDate(int id) {

@@ -1,5 +1,7 @@
 package com.example.kursovaya.cards;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -36,7 +38,7 @@ public class PatientCardActivity extends AppCompatActivity {
     private EditText editTextName, editTextSurname, editTextPatronymic, editTextDataBirth,
             editTextAddress, editTextPhone, editTextInsurance, editTextLogin, editTextPassword;
     private FloatingActionButton buttonBack;
-    private Button buttonAdd;
+    private Button buttonAdd, buttonDelete;
     private RadioGroup genderRadioGroup;
     private RadioButton maleRadioButton, femaleRadioButton;
     private int typeOperation; // 0 - добавление, 1 - изменение
@@ -78,6 +80,13 @@ public class PatientCardActivity extends AppCompatActivity {
             }
         });
 
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDeletePatient();
+            }
+        });
+
         db.close();
     }
 
@@ -96,6 +105,7 @@ public class PatientCardActivity extends AppCompatActivity {
         buttonAdd = findViewById(R.id.buttonAdd);
         maleRadioButton = findViewById(R.id.maleRadioButton);
         femaleRadioButton = findViewById(R.id.femaleRadioButton);
+        buttonDelete = findViewById(R.id.buttonDelete);
     }
 
     private void loadPatientData() {
@@ -126,7 +136,7 @@ public class PatientCardActivity extends AppCompatActivity {
                 }
 
                 typeOperation = 1;
-                buttonAdd.setText("СОХРАНИТЬ ИЗМЕНЕНИЯ");
+                buttonAdd.setText("СОХРАНИТЬ");
             }
         } else {
             typeOperation = 0;
@@ -201,6 +211,20 @@ public class PatientCardActivity extends AppCompatActivity {
         return db.addNewPatientAndUser(user, patient) != 1;
     }
 
+    private void deletePatient() {
+        int idUser = db.checkUserByLogin(originalLogin);
+        User user = createUser(idUser);
+        Patient patient = createPatient(db.checkIDPatientByIdUser(idUser));
+
+        if (db.deletePatient(patient) && db.deleteUser(user)) {
+            Toast.makeText(this,"Пациент удалён!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(PatientCardActivity.this,
+                    AdminListPatientActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
     private String getSelectedGender() {
         int selectedId = genderRadioGroup.getCheckedRadioButtonId();
         if (selectedId == maleRadioButton.getId()) {
@@ -231,5 +255,28 @@ public class PatientCardActivity extends AppCompatActivity {
         patient.setInsurance(editTextInsurance.getText().toString().trim());
         patient.setGender(getSelectedGender());
         return patient;
+    }
+
+    private void showDeletePatient() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Удаление пациента");
+        builder.setMessage("Вы уверены, что хотите удалить выбранного пациента?");
+
+        builder.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deletePatient();
+            }
+        });
+
+        builder.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

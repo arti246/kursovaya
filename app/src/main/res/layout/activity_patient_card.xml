@@ -9,9 +9,6 @@
     tools:context=".cards.PatientCardActivity">
 
     <!-- buttonBack -->
-
-    <!-- titleEditText -->
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/buttonBack"
         android:layout_width="61dp"
@@ -24,6 +21,7 @@
         app:srcCompat="@android:drawable/ic_menu_revert"
         tools:ignore="SpeakableTextPresentCheck" />
 
+    <!-- titleEditText -->
     <TextView
         android:id="@+id/titleEditText"
         android:layout_width="match_parent"
@@ -206,18 +204,43 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextLogin" />
 
-    <!-- buttonAdd -->
-    <Button
-        android:id="@+id/buttonAdd"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="РЕГИСТРАЦИЯ"
-        android:textSize="@dimen/text_size_medium"
+        android:layout_gravity="bottom|end"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextPassword">
+
+        <!-- buttonAdd -->
+        <Button
+            android:id="@+id/buttonAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
+            android:text="РЕГИСТРАЦИЯ"
+            android:textSize="@dimen/text_size_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- buttonDelete -->
+        <Button
+            android:id="@+id/buttonDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="УДАЛИТЬ"
+            android:textSize="@dimen/text_size_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </LinearLayout>
+
+
 
 
 
