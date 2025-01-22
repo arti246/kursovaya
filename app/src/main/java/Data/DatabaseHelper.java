@@ -20,9 +20,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import Model.Appointment;
+import Model.AppointmentSlot;
 import Model.Doctor;
 import Model.Patient;
 import Model.SpecializationDoctors;
@@ -270,10 +276,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return -1;
     }
 
-    public Patient getPatient(int id) {
+    public Patient getPatientByIdPatient(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(Patient.TABLE_NAME, new String[]{
-                        Patient.KEY_ID_PATIENT, // Добавлен ID пациента
+                        Patient.KEY_ID_PATIENT,
                         Patient.KEY_ID_USER,
                         Patient.KEY_NAME,
                         Patient.KEY_SURNAME,
@@ -284,11 +290,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         Patient.KEY_PHONE,
                         Patient.KEY_INSURANCE
                 },
-                Patient.KEY_ID_PATIENT + "=?", new String[]{String.valueOf(id)},
+                Patient.KEY_ID_USER + "=?", new String[]{String.valueOf(id)},
                 null, null, null, null);
 
-        Patient patient = null; // Инициализируем patient как null
-        if (cursor != null && cursor.moveToFirst()) { // Проверка на null и наличие данных
+        Patient patient = null;
+        if (cursor != null && cursor.moveToFirst()) {
             patient = new Patient(
                     cursor.getInt(cursor.getColumnIndexOrThrow(Patient.KEY_ID_PATIENT)),
                     cursor.getInt(cursor.getColumnIndexOrThrow(Patient.KEY_ID_USER)),
@@ -526,5 +532,73 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         cursor.close();
         return -1;
+    }
+
+    private List<String[]> generateTimeSlots(String startTime, String endTime, int intervalMinutes) {
+        List<String[]> timeSlots = new ArrayList<>();
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(sdf.parse(startTime)); // Устанавливаем начальное время
+            Date endTimeDate = sdf.parse(endTime); // Конечное время
+            while (calendar.getTime().before(endTimeDate)){
+                String start = sdf.format(calendar.getTime()); // Текущее время
+                calendar.add(Calendar.MINUTE, intervalMinutes); // Добавляем интервал
+                timeSlots.add(new String[]{start});
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return timeSlots;
+    }
+
+    // Метод для получения доступного времени для врача в выбранную дату
+    public List<String> getAvailableSlots(int doctorId, String date) {
+        List<String> availableSlots = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        String currentDate = sdf.format(new Date());
+
+        String startTimeDoctor = "09:00";
+        String endTimeDoctor = "18:00";
+
+        Appointment appointment = new Appointment();
+
+        // Генерация всех возможных слотов времени на основе рабочего времени
+        List<String[]> allTimeSlots = generateTimeSlots(startTimeDoctor, endTimeDoctor, 30);
+
+        // Запрос для получения занятых слотов
+        String selectQueryForAppointments = "SELECT " + appointment.KEY_TIME + " FROM "
+                + appointment.TABLE_NAME +
+                " WHERE " + appointment.KEY_ID_DOCTOR + " = ? " +
+                " AND \"" + appointment.KEY_DATE + "\" >= ?";
+
+        String[] selectionArgs = new String[]{String.valueOf(doctorId),  currentDate };
+        Cursor appointmentCursor = db.rawQuery(selectQueryForAppointments, selectionArgs);
+
+        List<String[]> busyTimeSlots = new ArrayList<>();
+
+        if(appointmentCursor.moveToFirst()){
+            do {
+                busyTimeSlots.add(new String[]{ appointmentCursor.getString(0) });
+            } while (appointmentCursor.moveToNext());
+        }
+        appointmentCursor.close();
+
+        // Сравнение всех слотов с занятыми и фильтрация доступных
+        for(String[] timeSlot : allTimeSlots){
+            boolean isBusy = false;
+            for(String[] busyTime : busyTimeSlots){
+                if(timeSlot[0].equals(busyTime[0])){
+                    isBusy = true;
+                    break;
+                }
+            }
+            if(!isBusy){
+               availableSlots.add(timeSlot[0]);
+            }
+        }
+        db.close();
+        return availableSlots;
     }
 }

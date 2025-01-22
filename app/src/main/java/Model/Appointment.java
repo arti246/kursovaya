@@ -14,8 +14,8 @@ public class Appointment {
     public static final String KEY_ID_PATIENT = "idPatient";
     public static final String KEY_ID_DOCTOR = "idDoctor";
     public static final String KEY_ID_DIAGNOSIS = "idDiagnosis";
-    public static final String KEY_DATE = "date";
-    public static final String KEY_TIME = "time";
+    public static final String KEY_DATE = "dateAppointment";
+    public static final String KEY_TIME = "timeAppointment";
     public static final String KEY_STATUS = "status";
 
     public Appointment() {

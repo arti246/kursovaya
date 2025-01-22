@@ -16,6 +16,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.kursovaya.PatientMainActivity;
 import com.example.kursovaya.R;
 import com.example.kursovaya.cards.PatientCardActivity;
 
@@ -23,6 +24,7 @@ import java.util.List;
 
 import Data.DatabaseHelper;
 import Model.Patient;
+import Utils.DialogUtils;
 
 public class AdminMainActivity extends AppCompatActivity {
 
@@ -66,34 +68,11 @@ public class AdminMainActivity extends AppCompatActivity {
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showSignOutDialog();
+                DialogUtils dialogUtils = new DialogUtils();
+                dialogUtils.showSignOutDialog(AdminMainActivity.this);
             }
         });
 
         db.close();
     }
-
-    private void showSignOutDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Выход из приложения");
-        builder.setMessage("Вы уверены, что хотите выйти?");
-
-        builder.setPositiveButton("Да", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finishAffinity();
-            }
-        });
-
-        builder.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
 }

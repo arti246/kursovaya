@@ -21,6 +21,7 @@ import com.example.kursovaya.admin.AdminMainActivity;
 import com.example.kursovaya.DoctorMainActivity;
 import com.example.kursovaya.PatientMainActivity;
 import com.example.kursovaya.R;
+import com.example.kursovaya.cards.PatientCardActivity;
 
 import Data.DatabaseHelper;
 import Model.User;
@@ -120,14 +121,23 @@ public class LoginActivity extends AppCompatActivity {
                         Intent intent;
 
                         if (IdUserType == 1) {
-                            intent = new Intent(LoginActivity.this, AdminMainActivity.class);//
-                            loadActivity(userLogin.getId(), intent);
+                            intent = new Intent(LoginActivity.this,
+                                    AdminMainActivity.class);
+                            intent.putExtra("ID_EXTRA", userLogin.getId());
+                            startActivity(intent);
+                            finish();
                         } else if (IdUserType == 2) {
-                            intent = new Intent(LoginActivity.this, DoctorMainActivity.class);
-                            loadActivity(userLogin.getId(), intent);
+                            intent = new Intent(LoginActivity.this,
+                                    DoctorMainActivity.class);
+                            intent.putExtra("ID_EXTRA", userLogin.getId());
+                            startActivity(intent);
+                            finish();
                         } else if (IdUserType == 3) {
-                            intent = new Intent(LoginActivity.this, PatientMainActivity.class);
-                            loadActivity(userLogin.getId(), intent);
+                            intent = new Intent(LoginActivity.this,
+                                    PatientMainActivity.class);
+                            intent.putExtra("ID_EXTRA", userLogin.getId());
+                            startActivity(intent);
+                            finish();
                         } else {
                             Toast.makeText(LoginActivity.this,
                                     "Проблема с авторизацией! Обратитесь в поддержку!",

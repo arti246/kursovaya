@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Kursovaya"
         tools:targetApi="31">
         <activity
+            android:name=".cards.AppointmentCardActivity"
+            android:exported="false" />
+        <activity
             android:name=".cards.DoctorCardActivity"
             android:exported="false" />
         <activity
