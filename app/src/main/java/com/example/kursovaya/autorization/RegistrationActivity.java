@@ -15,7 +15,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.kursovaya.PatientMainActivity;
+import com.example.kursovaya.patient.PatientMainActivity;
 import com.example.kursovaya.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 

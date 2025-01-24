@@ -16,12 +16,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.kursovaya.admin.AdminListPatientActivity;
 import com.example.kursovaya.admin.AdminMainActivity;
 import com.example.kursovaya.DoctorMainActivity;
-import com.example.kursovaya.PatientMainActivity;
+import com.example.kursovaya.patient.PatientMainActivity;
 import com.example.kursovaya.R;
-import com.example.kursovaya.cards.PatientCardActivity;
 
 import Data.DatabaseHelper;
 import Model.User;

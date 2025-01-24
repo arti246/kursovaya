@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.kursovaya.patient.PatientHistoryActivity;
+import com.example.kursovaya.patient.PatientMainActivity;
 import com.example.kursovaya.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -27,7 +30,7 @@ import java.util.List;
 import java.util.Locale;
 
 import Data.DatabaseHelper;
-import Model.AppointmentSlot;
+import Model.Appointment;
 import Model.Doctor;
 import Model.Patient;
 
@@ -57,7 +60,7 @@ public class AppointmentCardActivity extends AppCompatActivity {
         initViews();
         loadUserData();
         db = new DatabaseHelper(this);
-        dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
         dateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,14 +80,40 @@ public class AppointmentCardActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String spec = spinnerSpec.getSelectedItem().toString();
-                updateSubcategorySpinner(spec);
+                updateSpinnerSpec(spec);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        //android:focusable="false"
+        spinnerDoctor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String doctor = spinnerDoctor.getSelectedItem().toString();
+                updateSpinnerDoctor(doctor);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AppointmentCardActivity.this,
+                        PatientMainActivity.class);
+                intent.putExtra("ID_EXTRA", idUser);
+                startActivity(intent);
+            }
+        });
+
+        buttonAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkDataForAdd();
+            }
+        });
 
         db.close();
     }
@@ -145,7 +174,10 @@ public class AppointmentCardActivity extends AppCompatActivity {
     }
 
     private void loadAvailableTimes(String date) {
-        List<String> availableSlots = db.getAvailableSlots(1, date); //doctorId получать
+        String fioDoctor = spinnerDoctor.getSelectedItem().toString();
+        Doctor doctor = (Doctor) db.getDoctorByFIO(SplitFIO(fioDoctor));
+
+        List<String> availableSlots = db.getAvailableSlots(doctor.getIdDoctor(), date);
 
         if (availableSlots.size() == 0) {
             availableSlots.add("Свободного времени нет!");
@@ -162,9 +194,8 @@ public class AppointmentCardActivity extends AppCompatActivity {
 
     }
 
-    private void updateSubcategorySpinner(String spec) {
+    private void updateSpinnerSpec(String spec) {
         List<Doctor> allDoctors = db.getAllDoctors();
-        //String[] doctorsFIO = new String[allDoctors.size()];
         List<String> doctorsFIO = new ArrayList<>();
         int idSpec = db.getIdSpecBySpecialization(spec);
 
@@ -175,12 +206,59 @@ public class AppointmentCardActivity extends AppCompatActivity {
             }
         }
 
-        if (doctorsFIO == null) {
-            doctorsFIO.add("Нет врачей!");
-        }
-
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, doctorsFIO);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerDoctor.setAdapter(adapter);
+    }
+
+    private void updateSpinnerDoctor(String doctor) {
+        String[] fio = SplitFIO(doctor);
+        if (fio != null) {
+            Doctor getdoctor = (Doctor) db.getDoctorByFIO(fio);
+            if (getdoctor != null)
+                editTextOfficeNumber.setText(getdoctor.getOffice_number());
+        }
+    }
+
+    private String[] SplitFIO(String FIO) {
+        String[] parts = FIO.split(" ");
+        if (parts.length == 3) {
+            return parts;
+        }
+        return null;
+    }
+
+    private void checkDataForAdd() {
+        String dataGet = dateEditText.getText().toString();
+        if (dataGet.isEmpty()) {
+            Toast.makeText(AppointmentCardActivity.this,
+                    "Выберите дату приёма!",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Patient patient = (Patient) db.getPatientByIdPatient(idUser);
+        String fioDoctor = spinnerDoctor.getSelectedItem().toString();
+        Doctor doctor = (Doctor) db.getDoctorByFIO(SplitFIO(fioDoctor));
+        String timeGet = spinnerTime.getSelectedItem().toString();
+
+        Appointment appointment = new Appointment(patient.getIdPatient(), doctor.getIdDoctor(),
+                -1, dataGet, timeGet, "Записан");
+
+        if(db.addAppointment(appointment) != -1) {
+            Toast.makeText(AppointmentCardActivity.this,
+                    "Вы записаны на " + dataGet + " в " + timeGet + "!",
+                    Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(AppointmentCardActivity.this,
+                    PatientMainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        else {
+            Toast.makeText(AppointmentCardActivity.this,
+                    "Возникли проблемы с записью!",
+                    Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

@@ -4,16 +4,11 @@ import static android.content.ContentValues.TAG;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.example.kursovaya.PatientMainActivity;
-import com.example.kursovaya.autorization.RegistrationActivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,7 +23,6 @@ import java.util.List;
 import java.util.Locale;
 
 import Model.Appointment;
-import Model.AppointmentSlot;
 import Model.Doctor;
 import Model.Patient;
 import Model.SpecializationDoctors;
@@ -74,7 +68,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (!dbFile.exists()){
                 copyDatabase();
             }
-            SQLiteDatabase db = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READWRITE);
+            SQLiteDatabase db = SQLiteDatabase.openDatabase(dbPath, null,
+                    SQLiteDatabase.OPEN_READWRITE);
             return db;
         } catch (IOException | SQLiteException e) {
             Log.e(TAG, "Error opening database: " + e.getMessage());
@@ -456,9 +451,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
         }
         Doctor getDoctor = new Doctor(Integer.parseInt(cursor.getString(0)),
-                cursor.getString(2), cursor.getString(3),
-                cursor.getString(4), Integer.parseInt(cursor.getString(5)),
-                cursor.getString(6));
+                cursor.getString(1), cursor.getString(2),
+                cursor.getString(3), Integer.parseInt(cursor.getString(4)),
+                cursor.getString(5));
 
         return getDoctor;
     }
@@ -502,6 +497,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return -1;
     }
 
+    public Doctor getDoctorByFIO(String[] fio) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Doctor doctor = null;
+        Cursor cursor = db.query(
+                Doctor.TABLE_NAME,
+                null,
+                Doctor.KEY_NAME + " = ? AND " + Doctor.KEY_SURNAME + " = ? AND " +
+                        Doctor.KEY_PATRONYMIC + " = ?", new String[]{fio[1], fio[0], fio[2]},
+                null,
+                null,
+                null
+        );
+
+        if (cursor != null && cursor.moveToFirst()) {
+            Doctor getDoctor = new Doctor();
+            getDoctor.setIdDoctor(cursor.getInt(0));
+            getDoctor.setIdUser(cursor.getInt(1));
+            getDoctor.setName(cursor.getString(2));
+            getDoctor.setSurname(cursor.getString(3));
+            getDoctor.setPatronymic(cursor.getString(4));
+            getDoctor.setIdSpecialization(cursor.getInt(5));
+            getDoctor.setOffice_number(cursor.getString(6));
+            return getDoctor;
+        }
+
+        cursor.close();
+        return null;
+    }
+
     public String getSpecializationById(int idSpec) {
         SQLiteDatabase db = this.getReadableDatabase();
         String selection = SpecializationDoctors.KEY_ID_SPEC + " = ?";
@@ -534,6 +558,50 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return -1;
     }
 
+    public int addAppointment(Appointment appointment) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Appointment.KEY_ID_PATIENT, appointment.getIdPatient());
+        contentValues.put(Appointment.KEY_ID_DOCTOR, appointment.getIdDoctor());
+        contentValues.put(Appointment.KEY_DATE, appointment.getDate());
+        contentValues.put(Appointment.KEY_TIME, appointment.getTime());
+        contentValues.put(Appointment.KEY_STATUS, appointment.getStatus());
+        contentValues.put(Appointment.KEY_ID_DIAGNOSIS, appointment.getIdDiagnosis());
+
+        return  (int) db.insert(Appointment.TABLE_NAME, null, contentValues);
+    }
+
+    public List<Appointment> getAllAppointmentByIdPatietn(int idPatient) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<Appointment> appointmentList = new ArrayList<>();
+
+        Cursor cursor = null;
+        cursor = db.query(
+                Appointment.TABLE_NAME,
+                null,
+                Appointment.KEY_ID_PATIENT + " = ?",
+                new String[]{String.valueOf(idPatient)},
+                null, null, null
+        );
+
+        if (cursor.moveToFirst()) {
+            do {
+                Appointment appointment = new Appointment();
+                appointment.setIdAppointment(cursor.getInt(0));
+                appointment.setIdPatient(cursor.getInt(1));
+                appointment.setIdDoctor(cursor.getInt(2));
+                appointment.setIdDiagnosis(cursor.getInt(3));
+                appointment.setDate(cursor.getString(4));
+                appointment.setTime(cursor.getString(5));
+                appointment.setStatus(cursor.getString(6));
+
+                appointmentList.add(appointment);
+            } while (cursor.moveToNext());
+        }
+        return appointmentList;
+    }
+
     private List<String[]> generateTimeSlots(String startTime, String endTime, int intervalMinutes) {
         List<String[]> timeSlots = new ArrayList<>();
         try {
@@ -556,7 +624,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<String> getAvailableSlots(int doctorId, String date) {
         List<String> availableSlots = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
         String currentDate = sdf.format(new Date());
 
         String startTimeDoctor = "09:00";
@@ -573,7 +641,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " WHERE " + appointment.KEY_ID_DOCTOR + " = ? " +
                 " AND \"" + appointment.KEY_DATE + "\" >= ?";
 
-        String[] selectionArgs = new String[]{String.valueOf(doctorId),  currentDate };
+        String[] selectionArgs = new String[]{String.valueOf(doctorId),  date };
         Cursor appointmentCursor = db.rawQuery(selectQueryForAppointments, selectionArgs);
 
         List<String[]> busyTimeSlots = new ArrayList<>();

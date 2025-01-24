@@ -1,10 +1,9 @@
-package com.example.kursovaya;
+package com.example.kursovaya.patient;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -13,6 +12,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.kursovaya.R;
 import com.example.kursovaya.cards.AppointmentCardActivity;
 
 import Data.DatabaseHelper;
@@ -46,6 +46,16 @@ public class PatientMainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(PatientMainActivity.this,
                         AppointmentCardActivity.class);
+                intent.putExtra("ID_EXTRA", idUser);
+                startActivity(intent);
+            }
+        });
+
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PatientMainActivity.this,
+                        PatientHistoryActivity.class);
                 intent.putExtra("ID_EXTRA", idUser);
                 startActivity(intent);
             }

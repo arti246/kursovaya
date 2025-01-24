@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,11 +17,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.kursovaya.PatientMainActivity;
 import com.example.kursovaya.R;
 import com.example.kursovaya.admin.AdminListPatientActivity;
-import com.example.kursovaya.autorization.LoginActivity;
-import com.example.kursovaya.autorization.RegistrationActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Objects;

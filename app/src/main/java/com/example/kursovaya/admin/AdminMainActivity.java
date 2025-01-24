@@ -1,14 +1,9 @@
 package com.example.kursovaya.admin;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,14 +11,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.kursovaya.PatientMainActivity;
 import com.example.kursovaya.R;
-import com.example.kursovaya.cards.PatientCardActivity;
-
-import java.util.List;
 
 import Data.DatabaseHelper;
-import Model.Patient;
 import Utils.DialogUtils;
 
 public class AdminMainActivity extends AppCompatActivity {
